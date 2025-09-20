@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: identity
+  name: identity-service
+  namespace: dev-svcs
+spec:
+  ports:
+    - name: app-port
+      port: 8081
+      protocol: TCP
+      targetPort: 8081
+  selector:
+    app: identity

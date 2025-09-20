@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: payment-conf-config-map
+  namespace: dev-svcs
+data:
+  application.yaml: |
+
+    application:
+      version: 1
+    
+    server:
+      port: 9002
+      servlet:
+        context-path: /api-payment-service
+    spring:
+      config:
+        import:
+          - classpath:shared-db-config.yml
+          - classpath:shared-config.yml
+      application:
+        name: payment-service
+
+    springdoc:
+      api-docs:
+        path: /v3/api-docs
+      swagger-ui:
+        path: /swagger-ui.html
+        enabled: true
+
+    stripe:
+      webhook:
+        secret: whsec_b06165e2ab504ac9ba500affb4a5bd98d9ba2c69ca489b1aea2206b2331b1216dc6
+
+      merchantName: 'Lavanya Plus Ltd'

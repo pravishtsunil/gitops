@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: platform
+  name: platform-service
+  namespace: dev-svcs
+spec:
+  ports:
+    - name: app-port
+      port: 8083
+      protocol: TCP
+      targetPort: 8083
+  selector:
+    app: platform

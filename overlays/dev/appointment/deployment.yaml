@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appointment-service
+  labels:
+    app: appointment
+  namespace: dev-svcs
+spec:
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: appointment
+  template:
+    metadata:
+      labels:
+        app: appointment
+    spec:
+      nodeSelector:
+        app: dev
+      tolerations:
+        - key: "services"
+          operator: "Equal"
+          value: "main"
+          effect: "NoSchedule"
+      containers:
+        - name: appointment
+          image: "582345507453.dkr.ecr.eu-west-2.amazonaws.com/wema/dev/appointment-service:latest"
+          ports:
+            - containerPort: 9001
+          env:
+            - name: AWS_REGION
+              value: eu-west-2
+            - name: DB_URL
+              value: dev-postgres-service.dev-svcs.svc.cluster.local
+          volumeMounts:
+            - name: app-conf
+              mountPath: /app/config
+            - name: app-conf
+              mountPath: /config
+      volumes:
+        - name: app-conf
+          configMap:
+            name: appointment-conf-config-map

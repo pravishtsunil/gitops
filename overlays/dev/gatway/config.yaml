@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gatway-conf-config-map
+  namespace: dev-svcs
+data:
+  application.yaml: |
+
+    application:
+      version: 1
+    
+    spring:
+      cloud:
+        gateway:
+          routes:
+            - id: identity-service
+              uri: http://identity-service.dev-svcs.svc.cluster.local:8081
+              predicates:
+                - Path=/api-identity-service/**
+            - id: platform-service
+              uri: http://platform-service.dev-svcs.svc.cluster.local:8083
+              predicates:
+                - Path=/api-platform-service/**
+            - id: notification-service
+              uri: http://notification-service.dev-svcs.svc.cluster.local:8086
+              predicates:
+                - Path=/api-notification-service/**
+            - id: appointment-service
+              uri: http://appointment-service.dev-svcs.svc.cluster.local:9001
+              predicates:
+                - Path=/api-appointment-service/**
+            - id: payment-service
+              uri: http://payment-service.dev-svcs.svc.cluster.local:9002
+              predicates:
+                - Path=/api-payment-service/**
+
+      application:
+        name: gateway-service
+    #portnumner
+    server:
+      port: 8080
+
+    springdoc:
+      webjars:
+        prefix: /api-gateway-service
+      api-docs:
+        path: /v3/api-docs
+        enabled: true
+      swagger-ui:
+        urls-primary-name: Gateway Service
+        path: /swagger-ui.html
+        urls:
+          - name: Gateway Service
+            url: /v3/api-docs
+          - name: Identity Service
+            url: /api-identity-service/v3/api-docs
+          - name: Platform Service
+            url: /api-platform-service/v3/api-docs
+          - name: Notification Service
+            url: /api-notification-service/v3/api-docs
+          - name: Appointment Service
+            url: /api-appointment-service/v3/api-docs
+          - name: Payment Service
+            url: /api-payment-service/v3/api-docs
+
+
+
+    jwt:
+      secret: c2VjcmV0S2V5MTIzIT8kKiYoKS0rU3VwZXJTZWNyZXRLZXk=
+    basic-auth-user: gourav
+    basic-auth-password: $2a$12$PERsNq5Ma/0BYmNv1zQyROa23E69h77ch7WAGa4f72iqdGR3ropwi

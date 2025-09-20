@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: identity-service
+  labels:
+    app: identity
+  namespace: dev-svcs
+spec:
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: identity
+  template:
+    metadata:
+      labels:
+        app: identity
+    spec:
+      nodeSelector:
+        app: dev
+      tolerations:
+        - key: "services"
+          operator: "Equal"
+          value: "main"
+          effect: "NoSchedule"
+      containers:
+        - name: identity
+          image: "582345507453.dkr.ecr.eu-west-2.amazonaws.com/wema/dev/identity-service:latest"
+          ports:
+            - containerPort: 8081
+          env:
+            - name: AWS_REGION
+              value: eu-west-2
+            - name: SPRING_DATASOURCE_USERNAME
+              value: wema_core
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: Password@4321
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://dev-postgres-service.dev-svcs.svc.cluster.local:6444/wema   
+            
+          # startupProbe:
+          #   httpGet:
+          #     path: /api-auth/actuator/health
+          #     port: 9002
+          #   failureThreshold: 30
+          #   periodSeconds: 20
+          # readinessProbe: # check if all containers within pod are ready, if they are, then readiness probe says app is ready
+          #   httpGet:
+          #     path: /api-auth/actuator/health
+          #     port: 9002
+          #   initialDelaySeconds: 15
+          #   periodSeconds: 10
+          # livenessProbe: # check if app in deadlock, 15 secs after startup probe ends and check every 10 secs
+          #   httpGet:
+          #     path: /api-auth/actuator/health
+          #     port: 9002
+          #   initialDelaySeconds: 15
+          #   periodSeconds: 10
+          volumeMounts:
+            - name: app-conf
+              mountPath: /app/config
+      volumes:
+        - name: app-conf
+          configMap:
+            name: identity-conf-config-map

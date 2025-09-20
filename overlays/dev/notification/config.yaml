@@ -1,0 +1,108 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: notification-conf-config-map
+  namespace: dev-svcs
+data:
+  application.yaml: |
+
+    application:
+      version: 1
+    
+    server:
+    #port number
+      port: 8086
+      servlet:
+        context-path: /api-notification-service
+    spring:
+      application:
+        name: notification-service
+      config:
+        import:
+          - classpath:shared-db-config.yml
+          - classpath:shared-config.yml
+
+      cache:
+        type: redis
+      redis:
+        expiry: 2
+        host: localhost
+        port: 6379
+        lettuce:
+          pool:
+            max-active: 8
+            max-idle: 8
+            min-idle: 2
+
+    # mail:
+    #   host: email-smtp.ap-south-1.amazonaws.com
+    #   port: 587
+    #   username: AKIATBOGCWTN23W3M5FO
+    #   password: BHwI47C1KfqKQOIAbbH88OlCoNIbN4FvselB5OlYQRPr
+        # TLS , port 587
+    #   properties:
+    #     mail:
+    #       smtp:
+    #         starttls:
+    #           enable: true
+    #           required: true
+              # Other properties
+    #         auth: true
+    #       debug:  true
+      jackson:
+        default-property-inclusion: non_null
+        property-naming-strategy: SNAKE_CASE
+        serialization:
+          indent-output: true
+          fail-on-empty-beans: false
+        deserialization:
+          fail-on-unknown-properties: false
+
+
+    springdoc:
+      api-docs:
+        path: /v3/api-docs
+      swagger-ui:
+        path: /swagger-ui.html
+        enabled: true
+
+    ses:
+      sender:
+        email: abhishek@wearewema.com
+
+
+    management:
+      endpoints:
+        web:
+          exposure:
+            include: "*"
+
+    logging:
+      level:
+        org.springframework.cache: TRACE
+
+    aws:
+      region: ${AWS_REGION:eu-west-2}
+      access-key: ${AWS_ACCESS_KEY_ID}
+      secret-key: ${AWS_SECRET_ACCESS_KEY}
+
+      s3:
+        template-bucket: wema-gold-dev-notification-template
+    twilio:
+      account:
+        sid: AC52159429995356831219f0e4f922ec2c
+        auth:
+          token: 2e4f605e9e1843dbb4665e772e469adb
+        service:
+          sid: VAbe6314893c64aece4b8e4fd7d46b039d
+
+    notification:
+      mobile:
+        queue:
+          name: MOBILE_NOTIFICATION_MESSAGE
+      reminder:
+        queue:
+          name: REMINDER_NOTIFICATION_MESSAGE
+    activity:
+      queue:
+        name: Activity_logs

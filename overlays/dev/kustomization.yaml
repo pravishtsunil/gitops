@@ -1,0 +1,31 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - postgres/deployment.yaml
+  - postgres/service.yaml
+  - postgres/configmap.yaml
+  - postgres/secret.yaml
+  - postgres/pvc.yaml
+  - postgres/init-scripts.yaml
+  - redis/config.yaml
+  - redis/deployment.yaml
+  - redis/service.yaml
+  - gatway/config.yaml
+  - gatway/deployment.yaml
+  - gatway/service.yaml
+  - identity/config.yaml
+  - identity/deployment.yaml
+  - identity/service.yaml
+  - platform/config.yaml
+  - platform/deployment.yaml
+  - platform/service.yaml
+  - notification/config.yaml
+  - notification/deployment.yaml
+  - notification/service.yaml
+  - payment/config.yaml
+  - payment/deployment.yaml
+  - payment/service.yaml
+  - appointment/config.yaml
+  - appointment/deployment.yaml
+  - appointment/service.yaml
+namePrefix: dev-

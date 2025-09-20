@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: platform-service
+  labels:
+    app: platform
+  namespace: dev-svcs
+spec:
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: platform
+  template:
+    metadata:
+      labels:
+        app: platform
+    spec:
+      nodeSelector:
+        app: dev
+      tolerations:
+        - key: "services"
+          operator: "Equal"
+          value: "main"
+          effect: "NoSchedule"
+      containers:
+        - name: platform
+          image: "582345507453.dkr.ecr.eu-west-2.amazonaws.com/wema/dev/platform-service:latest"
+          ports:
+            - containerPort: 8083
+          env:
+            - name: AWS_REGION
+              value: eu-west-2
+            - name: DB_URL
+              value: dev-postgres-service.dev-svcs.svc.cluster.local
+          # startupProbe:
+          #   httpGet:
+          #     path: /api-auth/actuator/health
+          #     port: 9002
+          #   failureThreshold: 30
+          #   periodSeconds: 20
+          # readinessProbe: # check if all containers within pod are ready, if they are, then readiness probe says app is ready
+          #   httpGet:
+          #     path: /api-auth/actuator/health
+          #     port: 9002
+          #   initialDelaySeconds: 15
+          #   periodSeconds: 10
+          # livenessProbe: # check if app in deadlock, 15 secs after startup probe ends and check every 10 secs
+          #   httpGet:
+          #     path: /api-auth/actuator/health
+          #     port: 9002
+          #   initialDelaySeconds: 15
+          #   periodSeconds: 10
+          volumeMounts:
+            - name: app-conf
+              mountPath: /app/config
+      volumes:
+        - name: app-conf
+          configMap:
+            name: platform-conf-config-map
