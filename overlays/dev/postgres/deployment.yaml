@@ -5,7 +5,7 @@ metadata:
   namespace: dev-svcs
 spec:
   serviceName: postgres-service
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: postgres
@@ -16,10 +16,11 @@ spec:
     spec:
       nodeSelector:
         app: main
+      serviceAccountName: wema-dev-sa
       tolerations:
         - key: "services"
           operator: "Equal"
-          value: "main"
+          value: "postgres"
           effect: "NoSchedule"
       containers:
         - name: postgres
@@ -51,6 +52,7 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
+        storageClassName: postgres-storage-class
         resources:
           requests:
             storage: 5Gi

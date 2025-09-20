@@ -16,6 +16,7 @@ spec:
       labels:
         app: redis
     spec:
+      serviceAccountName: wema-dev-sa
       nodeSelector:
         app: main 
       tolerations:
