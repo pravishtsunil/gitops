@@ -4,6 +4,7 @@ metadata:
   name: postgres-service
   namespace: dev-svcs
 spec:
+  clusterIP: None
   ports:
     - port: 6444
       protocol: TCP

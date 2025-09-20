@@ -17,7 +17,7 @@ spec:
         app: redis
     spec:
       nodeSelector:
-        app: dev 
+        app: main 
       tolerations:
         - key: "services"
           operator: "Equal"

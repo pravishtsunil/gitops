@@ -16,7 +16,7 @@ spec:
         app: appointment
     spec:
       nodeSelector:
-        app: dev
+        app: main
       tolerations:
         - key: "services"
           operator: "Equal"
