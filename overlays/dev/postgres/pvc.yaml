@@ -9,4 +9,4 @@ spec:
   resources:
     requests:
       storage: 5Gi
-  storageClassName: postgres-storage-class
+  storageClassName: ebs-gp3

@@ -15,7 +15,7 @@ spec:
         app: postgres
     spec:
       nodeSelector:
-        app: main
+        app: postgres
       serviceAccountName: wema-dev-sa
       tolerations:
         - key: "services"
