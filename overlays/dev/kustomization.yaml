@@ -5,7 +5,6 @@ resources:
   - postgres/service.yaml
   - postgres/configmap.yaml
   - postgres/secret.yaml
-  - postgres/pvc.yaml
   - postgres/init-scripts.yaml
   - redis/config.yaml
   - redis/deployment.yaml
